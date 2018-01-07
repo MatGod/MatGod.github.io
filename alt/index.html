@@ -1,12 +1,295 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-	<meta http-equip="Content-type" content="text/html" charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no">
-	<title>GHHJGKLDS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Автомат поиска подстрок</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-	<script type="text/javascript" src="pointJS/point.min.js"></script>
-	<script type="text/javascript" src="start.js"></script>
+    <div class="container">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#manipulator" data-toggle="tab">Манипулятор</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#instruction" data-toggle="tab">Инструкция к манипулятору</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#theory" data-toggle="tab">Описание алгоритма</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-1"></div>
+        </div>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="manipulator">
+            <div class="container">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <div class="custom-controls-stacked">
+                            <label class="custom-control custom-radio">
+                                <input id="radioDemonstrator" name="radio-stacked" type="radio" class="custom-control-input" checked>
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Режим демонстрации</span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input id="radioTrainer" name="radio-stacked" type="radio" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Режим тренировки</span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input id="radioControl" name="radio-stacked" type="radio" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Режим контроля</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <div>Образец строки для поиска: </div>
+                        <div id="example" style="font-weight: bold"><br></div>
+                        <button id="generateExample" class="btn btn-info">Сгенерировать</button>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <h6 class="mb-0">Задание автомата матрицей</h6>
+                            </div>
+                        </div>
+                        <div id = "matrix" class="card-block">
+                            <!--Матрица-->
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-5">
+                        <button id="drawAutomate" class="btn btn-info" disabled>Нарисовать автомат</button>
+                    </div>
+                    <div class="col-5">
+                        <button id="checkAnswer" class="btn btn-danger" disabled>Проверить решение</button>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <h4>Автомат поиска</h4>
+                        <svg id="drawPole" style="width: 800px; height:380px; border: 1px solid gray;"></svg>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="instruction">
+            <div class="container">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-7">
+                        <h3>Режимы работы</h3>
+                        <div>
+                            Пользователю на выбор доступны 3 варианта режимов работы: <b>Демонстрация, Тренировка</b> и
+                            <b>Контроль</b>.
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <img src="img/modes.jpg" width="100%">
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-7">
+                        <h5>Демонстрация</h5>
+                        <div>
+                            В режиме демонстрации всё, что необходимо сделать пользователю, это нажать на кнопку
+                            "Сгенерировать", после чего программой автоматически будет построен автомат поиска по
+                            сгенерированной случайным образом строке. В таблицу переходов автомата будут внесены необходимые
+                            значения, а также построенный автомат будет графически отображён внизу страницы.
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <img src="img/generate-button.jpg" width="100%">
+                        <img src="img/example-table.jpg" width="100%">
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-7">
+                        <h5>Тренировка</h5>
+                        <div>
+                            В режиме тренировки пользователю необходимо самому составить таблицу переходов автомата по
+                            сгенерированному образцу. После нажатия кнопки "Сгенерировать" появляется таблица, в которую
+                            надо ввести все необходимые значения. <br><br>
+                            Также появляется возможность проверить своё решение, нажав на кнопку "Проверить решение".
+                            Сообщение о правильности решения будет выведено на экран. <br><br>
+                            Также для некоторого упрощения составления таблицы переходов в режиме тренировки доступна
+                            возможность нарисовать автомат с уже внесёнными в таблицу переходами, нажав кнопку
+                            "Нарисовать автомат". Его изображение в виде ориентированного графа будет отображено внизу
+                            страницы. Присутствует возможность передвижения вершин графа для более точного его рассмотрения.
+                        </div>
+                        <img src="img/trening.jpg" width="100%">
+                    </div>
+                    <div class="col-3">
+                        <img src="img/draw-button.jpg" width="100%">
+                        <img src="img/error.jpg" width="100%">
+                        <img src="img/right-answer.jpg" width="100%">
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-7">
+                        <h5>Контроль</h5>
+                        <div>
+                            Режим контроля отличается от режима тренировки отсутствием возможности отрисовки автомата,
+                            а также тем, что при отправке на проверку неверного решения нет возможности продолжить
+                            работу с той же строкой. Для повторного прохождения контроля необходимо будет сгенерировать
+                            другой пример.
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="theory">
+            <div class="container">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <h3>Алгоритм поиска подстрок с помощью конечных автоматов</h3>
+                        <div>
+                            Данный проект рассчитан на пользователей, имеющих хотя бы небольшое представление о том,
+                            что такое конечные автоматы. Поэтому не будем углубляться в разбор их самих,
+                            а сосредоточимся непосредственно на конечных автоматах, применяемых для нашего алгоритма.
+                            <br><br>
+                        </div>
+                        <h3>Основы</h3>
+                        <div>
+                            Алгоритм поиска подстрок с помощью конечных автоматов начинается, непосредственно,
+                            с построения конечного автомата по имеющемуся образцу (искомой подстроке). Эффективность
+                            и привлекательность этого алгоритма состоит в том, что при последующем анализе исходной
+                            строки каждый её символ обрабатывается один единственный раз, что обеспечивает линейную
+                            сложность непосредственно поиска подстрок, что обеспечивает большую эффективность при
+                            больших объёмах входных данных. Однако время построения самого автомата зависит от
+                            используемого алфавита и, при большом его объёме, может быть достаточно значительным.
+                            <br><br>
+                        </div>
+                        <h3>Предварительная подготовка. Построение автомата</h3>
+                        <div>
+                            Для каждого образца существует свой автомат поиска, так что его необходимо сконструировать
+                            на этапе предварительной обработки, чтобы затем его можно было использовать для поиска
+                            необходимых нам подстрок.<br><br>
+
+                            Для построения автомата, соответствующего заданному образцу <b>P[1..m]</b>, для начала
+                            определим вспомогательную суффиксную функцию <b>D(x)</b>, которая является отображением
+                            используемого алфавита на множество <b>[1..m]</b>. Численно <b>D</b> равна длине
+                            максимального префикса образца <b>P</b>, являющегося суффиксом строки <b>x</b>.
+                            Наиболее наглядно объяснить процесс простоения можно на конкретном примере.<br><br>
+
+                            <h5>Пример</h5>
+                            За образец возьмём строку <b>ababaca</b>. Используемый алфавит: <b>[a, b, c]</b>.
+                            <img src="img/automate-graph.jpg" width="100%">
+                            Рассмотрим данный автомат несколько подробнее.<br>
+                            Переходы вправо, образующие "скелет" автомата, соотбетствуют переходам при совпадении
+                            символов входной строки с символами строки-образца.<br>
+                            Переходы влево, соответственно, при несовпадении.<br>
+                            Вычисление этих переходов происходит с помощью описанной ранее функции <b>D(x)</b>.<br><br>
+                            <b>Некоторые из вычислений переходов:</b><br><br>
+
+                            <b>1)</b> Переход из состояния <b>1</b> при считывании символа <b>b</b>.<br>
+                            <b>P=ababaca, D(ab) = 2</b> (Максимальный префикс строки <b>P</b>, являющийся суффиксом строки
+                            <b>ab</b>, имеет длину <b>2</b>) В итоге при при считывании символа <b>b</b>, если автомат
+                            находится в состоянии <b>1</b>, произойдёт переход автомата в состояние <b>2</b>, что
+                            соответствует второму слева ребру "скелета" автомата.<br><br>
+
+                            <b>2)</b> Переход из состояния <b>1</b> при считывании символа <b>a</b>.<br>
+                            <b>P=ababaca, D(aa) = 1</b> (Максимальный префикс строки <b>P</b>, являющийся суффиксом строки
+                            <b>aa</b>, имеет длину <b>1</b>) В итоге при при считывании символа <b>a</b>, если автомат
+                            находится в состоянии <b>1</b>, произойдёт переход автомата в то же состояние <b>1</b>, что
+                            соответствует отображённой на рисунке петле.<br><br>
+
+                            <b>3)</b> Переход из состояния <b>5</b> при считывании символа <b>b</b>.<br>
+                            <b>P=ababaca, D(ababab) = 4</b> (Максимальный префикс строки <b>P</b>(<b>abab</b>aca),
+                            являющийся суффиксом строки <b>ababab</b> (ab<b>abab</b>), имеет длину <b>4</b>) В итоге при
+                            считывании символа <b>b</b>, если автомат находится в состоянии <b>5</b>, произойдёт переход
+                            автомата в состояние <b>4</b>, что соответствует рисунку.<br><br>
+                            Таким образом, посчитав все переходы автомата, мы можем представить его в виде следующей
+                            таблицы переходов:<br>
+                            <img src="img/automate-table.jpg" width="40%"><br><br>
+                        </div>
+                        <h3>Работа алгоритма</h3>
+                        <div>
+                            Работа непосредственно самого алгоритма не представляет из себя совершенно ничего сложного
+                            и заключается лишь в считывании очередного символа в поданой на вход строке и переходе
+                            в состояние, соответствующее переходу из текущего состояния автомата для считанного символа.
+                            При переходе автомата в конечное состояние выводится сообщение о том, что искомый образец
+                            был найден начиная с символа с индексом <b>x</b>.<br>
+                            x = [индекс последнего считанного символа] - [длина строки-образца]<br><br>
+
+                            <h5>Псевдокод данного алгоритма можно записать в виде:</h5><br>
+                            F(q, simbol) - функция перехода построенного конечного автомата.<br>
+                            q - текущее состояние автомата<br>
+                            m - конечное состояние автомата<br>
+                            simbol - считанный символ<br>
+                            T - подаваемая на вход строка<br><br>
+                            <b>
+                                <pre>
+КОНЕЧНЫЙ_АВТОМАТ_ПОИСКА(T, F, m)
+    n = ДЛИНА[T]
+    q = 0
+    i = 1
+    ПОКА i < n
+        q = F(q, T[i])
+        ЕСЛИ q = m
+            ВЫВОД("Образец обнаружен на позиции " i - m)
+    КЦ
+                                </pre>
+                            </b>
+                            <br>
+                            По псевдокоду алгоритма легко понять, что алгоритм имеет линейную временную сложность, чем
+                            качественно и отличается от некоторых других алгоритмов поиска в лучшую сторону.
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.1/raphael.js"></script>
+    <script type="text/javascript" src="js/dracula/dracula.dev.js"></script>
+    <script src="js/main%20scripts.js"></script>
 </body>
 </html>

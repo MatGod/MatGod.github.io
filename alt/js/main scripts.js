@@ -56,32 +56,41 @@ function demonstrate() {
 
 function checkAnswer() {
     initAdjMatrix();
-    var i, j;
+    var i, j, right = 1, pole;
     for (i = 0; i < exampleLenth + 1; i++) {
         for (j = 0; j < exampleLenth + 1; j++) {
+            pole = document.getElementById("pole" + i + "-" + j);
             if (adjMatrix[i][j] !== masterAdjMatrix[i][j]) {
-                swal({
-                    icon: "error",
-                    title: "Ошибка",
-                    text: "Автомат составлен неверно",
-                    button: "Ещё раз!"
-                });
-                if (mode === "C") {
-                    exampleText.innerText = "";
-                    matrix.innerHTML = "";
-                    checkButton.disabled = true;
-                }
-                return 0;
+                right = 0;
+                pole.style = "background-color: red";
+            }
+            else {
+                pole.style = "background-color: white";
             }
         }
     }
-    swal({
-        icon: "success",
-        title: "Ура!",
-        text: "Автомат составлен без ошибок",
-        button: "Спасибо!"
-    });
-    return 0;
+    drawAutomate();
+    if (right === 1) {
+        swal({
+            icon: "success",
+            title: "Ура!",
+            text: "Автомат составлен без ошибок",
+            button: "Спасибо!"
+        });
+    }
+    else {
+        swal({
+            icon: "error",
+            title: "Ошибка",
+            text: "Автомат составлен неверно",
+            button: "Ещё раз!"
+        });
+        if (mode === "C") {
+            exampleText.innerText = "";
+            matrix.innerHTML = "";
+            checkButton.disabled = true;
+        }
+    }
 }
 
 function getRandomInt(min, max) {
@@ -182,15 +191,17 @@ function drawAutomate() {
     drawPole.innerHTML = "";
     const g = new Dracula.Graph;
 
-    var i, j;
+    var i, j, edgeColor;
     for (i = 0; i < exampleLenth + 1; i++) {
         g.addNode(String(i));
     }
     for (i = 0; i < exampleLenth + 1; i++) {
         for (j = 0; j < alfLen; j++) {
             if (adjMatrix[i][j] !== "0") {
-                if (i === Number(adjMatrix[i][j])) g.addEdge(String(i), adjMatrix[i][j], { directed: true, label: "____" + alf[j], "label-style": {"font-size": 20}});
-                else g.addEdge(String(i), String(adjMatrix[i][j]), { directed: true, label: alf[j], "label-style": {"font-size": 20}});
+                if (adjMatrix[i][j] !== masterAdjMatrix[i][j]) edgeColor = "red";
+                else edgeColor = "lightgrey";
+                if (i === Number(adjMatrix[i][j])) g.addEdge(String(i), adjMatrix[i][j], { directed: true, label: "___" + alf[j], fill: edgeColor, "label-style": {"font-size": 30}});
+                else g.addEdge(String(i), String(adjMatrix[i][j]), { directed: true, label: alf[j], fill: edgeColor, "label-style": {"font-size": 30, "fill": "black"}});
             }
         }
     }

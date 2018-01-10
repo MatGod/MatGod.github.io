@@ -1,4 +1,4 @@
-var exampleLenth, alfLen, expString, adjMatrix = [], masterAdjMatrix = [], table, mode = "D", alf = ["A","B","C","D","E"];
+var exampleLenth, alfLen = 5, expString, adjMatrix = [], masterAdjMatrix = [], table, mode = "D", alf = ["A","B","C","D","E"];
 var generateButton = document.getElementById("generateExample");
 var drawButton = document.getElementById("drawAutomate");
 var checkButton = document.getElementById("checkAnswer");
@@ -58,7 +58,7 @@ function checkAnswer() {
     initAdjMatrix();
     var i, j, right = 1, pole;
     for (i = 0; i < exampleLenth + 1; i++) {
-        for (j = 0; j < exampleLenth + 1; j++) {
+        for (j = 0; j < alfLen; j++) {
             pole = document.getElementById("pole" + i + "-" + j);
             if (adjMatrix[i][j] !== masterAdjMatrix[i][j]) {
                 right = 0;
@@ -104,7 +104,6 @@ function getRandomString() {
     for (var i = 0; i < lenth; i++) {
         result += String.fromCharCode(getRandomInt(65, 70));
     }
-    alfLen = 5;
     return result;
 }
 
@@ -180,8 +179,7 @@ function initAdjMatrix() {
         adjMatrix[i] = [];
         for (j = 0; j < alfLen; j++) {
             pole = document.getElementById("pole" + i + "-" + j);
-            if (pole.value.length === 1) adjMatrix[i][j] = pole.value;
-            else adjMatrix[i][j] = "0";
+            adjMatrix[i][j] = pole.value;
         }
     }
 }
@@ -197,7 +195,7 @@ function drawAutomate() {
     }
     for (i = 0; i < exampleLenth + 1; i++) {
         for (j = 0; j < alfLen; j++) {
-            if (adjMatrix[i][j] !== "0") {
+            if (adjMatrix[i][j] !== "0" && adjMatrix[i][j] !== "") {
                 if (adjMatrix[i][j] !== masterAdjMatrix[i][j]) edgeColor = "red";
                 else edgeColor = "lightgrey";
                 if (i === Number(adjMatrix[i][j])) g.addEdge(String(i), adjMatrix[i][j], { directed: true, label: "___" + alf[j], fill: edgeColor, "label-style": {"font-size": 30}});

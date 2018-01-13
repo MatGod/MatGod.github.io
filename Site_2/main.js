@@ -1,11 +1,18 @@
 var text, ch, pos;
+var lit = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+var checkButton = document.getElementById("checkButton");
+var textBox = document.getElementById("text");
+var isFirstTextBoxClick = true;
+checkButton.addEventListener("click", parseThis);
+textBox.addEventListener("click", function () {
+    if (isFirstTextBoxClick) textBox.value = "";
+});
 
 function parseThis() {
-    var TextBox = document.getElementById('text');
-    text = TextBox.value;
+    text = textBox.value;
     ch = text[0];
     pos = 0;
-    if (parseF() && BktBalance()) {
+    if (parseFunc()) {
         alert("Выражение корректно!");
     }
     else {
@@ -13,81 +20,75 @@ function parseThis() {
     }
 }
 
-function isLiteral() {
-    var lit = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
-    ];
-    for (var i = 0; i < lit.length; i++) {
-        if (ch == lit[i]) {
-            read();
-            return true;
-        }
-    }
-    return false;
-}
-
-function isLiteralWithoutRead() {
-    var lit = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
-    ];
-    for (var i = 0; i < lit.length; i++) {
-        if (ch == lit[i]) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function isSign() {
-    if (ch == '+' || ch == '*') {
-        read();
-        return true;
-    }
-    else if (ch == '(' || isLiteralWithoutRead()) {
-        return true;
-    }
-    return false;
-}
-
 function read() {
-    if (pos < text.length) {
-        pos++;
-        ch = text[pos];
-    }
+    pos++;
+    ch = text[pos];
 }
 
-function parseF() {
-    return (parseStart() && parseEnd());
+function parseFunc() {
+    var result = parseStart();
+    result &= parseEnd();
+    return result;
 }
 
 function parseStart() {
-    if (isLiteral()) return parseEnd();
-    else return (parseBkt() && parseEnd());
-}
-
-function parseBkt() {
-    if (ch == "(") {
-        read();
-        if (parseStart() && parseEnd()) {
-            if (ch == ")") {
-                read();
-                return true;
-            }
-        }
+    var result;
+    if (isLiteral()) {
+        result = parseLit();
     }
-    return false;
+    else if (ch === "(") {
+            result = parseBkt();
+        }
+        else return false;
+    result &= parseEnd();
+    return result;
 }
 
 function parseEnd() {
-    if (ch == ")" || ch == undefined) return true;
-    else if (isSign()) return parseStart();
-    return false;
+    var result = true;
+    if (isSign()) {
+        result = parseSign();
+        result &= parseStart();
+    }
+    return result;
 }
 
-function BktBalance() {
-    var balance = 0;
-    for (var i = 0; i < text.length; i++) {
-        if (text[i] == "(") balance++;
-        if (text[i] == ")") balance--;
+function parseBkt() {
+    var result;
+    if (ch === "(") {
+        read();
+        result = parseStart();
+        result &= parseEnd();
+        if (ch === ")") {
+            read();
+            return result;
+        }
+        else return false;
     }
-    if (balance == 0) return true;
     else return false;
+}
+
+function parseLit() {
+    if (isLiteral()) {
+        read();
+        return true;
+    }
+    else return false;
+}
+
+function parseSign() {
+    if (ch === "+" || ch === "*") read();
+    return true;
+}
+
+function isSign() {
+    if (ch === "+" || ch === "*" || ch === "(" || isLiteral()) return true;
+    else return false;
+}
+
+function isLiteral() {
+    for (var i = 0; i < lit.length; i++) {
+        if (ch === lit[i]) return true;
+    }
+    return false;
 }

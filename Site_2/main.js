@@ -13,10 +13,20 @@ function parseThis() {
     ch = text[0];
     pos = 0;
     if (parseFunc()) {
-        alert("Выражение корректно!");
+        swal({
+            icon: "success",
+            title: "Ура!",
+            text: "Выражение корректно!",
+            button: "Ввести другое"
+        });
     }
     else {
-        alert("Неверное выражение...");
+        swal({
+            icon: "error",
+            title: "Увы..",
+            text: "Выражение некорректно..",
+            button: "Ввести другое"
+        });
     }
 }
 
